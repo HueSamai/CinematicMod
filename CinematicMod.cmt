@@ -1,4 +1,5 @@
 Name=Cinematic
 Author=dotpy
 Links=https://github.com/HueSamai/CinematicMod/raw/main/Cinematic.dll
+Message=Press F1 to switch to free cam. Hold in the right mouse button to rotate the camera, and arrow keys to move it around. F2 locks the camera. F3 toggles kill volumes.
 LatestVersion=https://raw.githubusercontent.com/HueSamai/CinematicMod/main/version
