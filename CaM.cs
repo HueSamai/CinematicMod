@@ -41,17 +41,16 @@ public class CinematicMod : CementMod
         yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "Menu");
         camera = Camera.main.gameObject;
         keybindManager = new CinematicKeybindManager(modFile);
-        InputManager.onInputHeld(keybindManager.GetForwardKeyPath()).bind(MoveForward);
-        InputManager.onInputHeld(keybindManager.GetBackwardKeyPath()).bind(MoveBackward);
-        InputManager.onInputHeld(keybindManager.GetRightKeyPath()).bind(MoveRight);
-        InputManager.onInputHeld(keybindManager.GetLeftKeyPath()).bind(MoveLeft);
-        InputManager.onInputHeld(keybindManager.GetUpKeyPath()).bind(MoveUp);
-        InputManager.onInputHeld(keybindManager.GetDownKeyPath()).bind(MoveDown);
-        InputManager.onInput(keybindManager.GetToggleCamKeyPath()).bind(ToggleCam);
-        InputManager.onInput(keybindManager.GetLockCamKeyPath()).bind(ToggleLock);
-        InputManager.onInput(keybindManager.GetToggleKillVolumes()).bind(
-            CementModSingleton.Get<RemoveKillVolume>().ToggleKillVolumes
-        );
+        
+        keybindManager.BindForward(MoveForward);
+        keybindManager.BindBackward(MoveBackward);
+        keybindManager.BindRight(MoveRight);
+        keybindManager.BindLeft(MoveLeft);
+        keybindManager.BindUp(MoveUp);
+        keybindManager.BindDown(MoveDown);
+        keybindManager.BindToggleCam(ToggleCam, false);
+        keybindManager.BindToggleLock(ToggleLock, false);
+        keybindManager.BindToggleKillVolumes(CementModSingleton.Get<RemoveKillVolume>().ToggleKillVolumes, false);
     }
 
     private void OnSceneUnload(Scene _)
@@ -91,7 +90,7 @@ public class CinematicMod : CementMod
         cameraRotation = camera.transform.rotation;
     }
 
-    private void MoveForward(Actor _)
+    private void MoveForward()
     {
         if (!usingCustomCam || locked)
         {
@@ -101,7 +100,7 @@ public class CinematicMod : CementMod
         camera.transform.position += speed * Time.deltaTime * camera.transform.forward;
     }
 
-    private void MoveUp(Actor _)
+    private void MoveUp()
     {
         if (!usingCustomCam || locked)
         {
@@ -111,7 +110,7 @@ public class CinematicMod : CementMod
         camera.transform.position += speed * Time.deltaTime * camera.transform.up;
     }
 
-    private void MoveDown(Actor _)
+    private void MoveDown()
     {
         if (!usingCustomCam || locked)
         {
@@ -121,7 +120,7 @@ public class CinematicMod : CementMod
         camera.transform.position -= speed * Time.deltaTime * camera.transform.up;
     }
 
-    private void MoveBackward(Actor _)
+    private void MoveBackward()
     {
         if (!usingCustomCam || locked)
         {
@@ -131,7 +130,7 @@ public class CinematicMod : CementMod
         camera.transform.position -= speed * Time.deltaTime * camera.transform.forward;
     }
 
-    private void MoveRight(Actor _)
+    private void MoveRight()
     {
         if (!usingCustomCam || locked)
         {
@@ -141,7 +140,7 @@ public class CinematicMod : CementMod
         camera.transform.position += speed * Time.deltaTime * camera.transform.right;
     }
 
-    private void MoveLeft(Actor _)
+    private void MoveLeft()
     {
         if (!usingCustomCam || locked)
         {
@@ -151,12 +150,12 @@ public class CinematicMod : CementMod
         camera.transform.position -= speed * Time.deltaTime * camera.transform.right;
     }
 
-    private void ToggleLock(Actor _)
+    private void ToggleLock()
     {
         locked = !locked;
     }
 
-    private void ToggleCam(Actor _)
+    private void ToggleCam()
     {
         usingCustomCam = !usingCustomCam;
         if (usingCustomCam)
@@ -180,6 +179,13 @@ public class CinematicMod : CementMod
         {
             UI = GameObject.Find("UI");
         }
+
+        if (keybindManager == null)
+        {
+            return;
+        }
+
+        keybindManager.CheckInputs();
 
         if (!usingCustomCam || locked)
         {
